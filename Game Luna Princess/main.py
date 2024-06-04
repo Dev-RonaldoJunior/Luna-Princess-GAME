@@ -16,7 +16,7 @@ RED = (255, 0, 0)
 
 # STATUS DO PERSONAGEM
 player_size = 50
-player_x = WIDTH // 2
+player_x = 50
 player_y = HEIGHT - player_size
 player_speed = 5
 jump_height = 15
@@ -24,7 +24,7 @@ is_jumping = False
 velocity_y = 0
 gravity = 0.8
 
-#OBSTÁCULOS
+# OBSTÁCULOS
 obstacle_width = 50
 obstacle_height = 50
 obstacles = [
@@ -52,7 +52,7 @@ while running:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-
+            
     # MOVIMENTAÇÃO DO PERSONAGEM
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
@@ -92,7 +92,7 @@ while running:
 
     # DESENHAR OBSTÁCULOS
     for obstacle in obstacles:
-        pygame.draw.rect(window,RED, (obstacle["x"], obstacle["y"], obstacle_width, obstacle_height))
+        pygame.draw.rect(window, RED, (obstacle["x"], obstacle["y"], obstacle_width, obstacle_height))
         
     pygame.display.update()
 
