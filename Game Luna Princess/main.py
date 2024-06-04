@@ -23,6 +23,9 @@ is_jumping = False
 velocity_y = 0
 gravity = 0.8
 
+# CONTROLE DE TEMPO
+clock = pygame.time.Clock()
+
 # LOOP PRINCIPAL DO JOGO
 running = True
 while running:
@@ -37,7 +40,14 @@ while running:
         player_x -= player_speed
     if keys[pygame.K_RIGHT]:
         player_x += player_speed
-        
+
+    # LIMITANDO O MOVIMENTO DENTRO DA JANELA
+    if player_x < 0:
+        player_x = 0
+    elif player_x > WIDTH - player_size:
+        player_x = WIDTH - player_size
+
+    # SALTO DO PERSONAGEM    
     if not is_jumping:
         if keys[pygame.K_SPACE]:
             is_jumping = True
@@ -55,4 +65,5 @@ while running:
     pygame.draw.rect(window, BLACK, (player_x, player_y, player_size, player_size))
     pygame.display.update()
 
-    pygame.time.delay(30)
+    # CONTROLAR TAXA DE QUADROS
+    clock.tick(60)
