@@ -37,7 +37,14 @@ while running:
         player_x -= player_speed
     if keys[pygame.K_RIGHT]:
         player_x += player_speed
-        
+
+    # LIMITANDO O MOVIMENTO DENTRO DA JANELA
+    if player_x < 0:
+        player_x = 0
+    elif player_x > WIDTH - player_size:
+        player_x = WIDTH - player_size
+
+    # SALTO DO PERSONAGEM    
     if not is_jumping:
         if keys[pygame.K_SPACE]:
             is_jumping = True
@@ -56,3 +63,4 @@ while running:
     pygame.display.update()
 
     pygame.time.delay(30)
+    
