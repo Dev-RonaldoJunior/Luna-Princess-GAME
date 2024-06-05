@@ -13,6 +13,7 @@ pygame.display.set_caption('Luna Princess')
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
+GREEN = (0, 255, 0)
 
 def main():
     # STATUS DO PERSONAGEM
@@ -34,10 +35,19 @@ def main():
         {"x": 600, "y": HEIGHT - obstacle_height},
     ]
 
+    # PLATAFORMAS
+    platform_width = 100
+    platform_height = 20
+    platforms = [
+        {"x": 150, "y": HEIGHT - 150},
+        {"x": 350, "y": HEIGHT - 300},
+        {"x": 550, "y": HEIGHT - 450},
+    ]
+
     # CONTROLE DE TEMPO
     clock = pygame.time.Clock()
 
-    # FUNÇÕES DO JOGO
+    # FUNÇÃO DOS OBSTÁCULOS
     def check_collision(player_x, player_y, player_size, obstacles):
         for obstacle in obstacles:
             if (player_x < obstacle["x"] + obstacle_width and
@@ -46,6 +56,25 @@ def main():
                 player_y + player_size > obstacle["y"]):
                 return True
         return False
+    
+    # FUNÇÃO DAS PLATAFORMAS
+    def check_platform_collision(player_x, player_y, player_size, platforms):
+        for platform in platforms:
+            if (player_x < platform["x"] + platform_width and
+                player_x + player_size > platform["x"] and
+                player_y + player_size > platform["y"] and
+                player_y < platform["y"] + platform_height):
+                return platform
+        return None
+    
+    def check_head_collision(player_x, player_y, player_size, platforms):
+        for platform in platforms:
+            if (player_x < platform["x"] + platform_width and
+                player_x + player_size > platform["x"] and
+                player_y < platform["y"] + platform_height and
+                player_y > platform["y"]):
+                return platform
+        return None
 
     # LOOP PRINCIPAL DO JOGO
     running = True
@@ -77,11 +106,38 @@ def main():
         if is_jumping:
             player_y += velocity_y
             velocity_y += gravity
+
+            # VERIFICAR COLISÃO COM PLATAFORMAS DURANTE PULO
+            head_platform = check_head_collision(player_x, player_y, player_size, platforms)
+            if head_platform and velocity_y <0:
+                player_y = head_platform["y"] + platform_height
+                velocity_y = 0
+
+            # VERIFICAR COLISÃO COM PLATAFORMAS DURANTE A QUEDA
+            platform = check_platform_collision(player_x, player_y, player_size, platforms)
+            if platform and velocity_y >= 0:
+                player_y = platform["y"] - player_size
+                is_jumping = False
+                velocity_y = 0
+
             if player_y >= HEIGHT - player_size:
                 player_y = HEIGHT - player_size
                 is_jumping = False
+        
+        else:
+            # VERIFICAR SE O PLAYER ESTA EM CIMA DA PLATAFORMA
+            on_platform = check_platform_collision(player_x, player_y, player_size, platforms)
+            if not on_platform and player_y < HEIGHT - player_size:
+                is_jumping = True
+                velocity_y = 0
 
-        # VERIFICAR COLISÃO
+            #IMPEDE O PLAYER DE PASSAR POR BAIXO DA PLATAFORMA
+            if on_platform and player_y + player_size > on_platform["y"]:
+                player_y = on_platform["y"] - player_size
+                is_jumping = False
+                velocity_y = 0
+
+        # VERIFICAR COLISÃO COM OBSTÁCULOS
         if check_collision(player_x, player_y, player_size, obstacles):
             print("Colisão detectada!")
             main()  # Reinicia o jogo
@@ -96,11 +152,15 @@ def main():
         # DESENHAR OBSTÁCULOS
         for obstacle in obstacles:
             pygame.draw.rect(window, RED, (obstacle["x"], obstacle["y"], obstacle_width, obstacle_height))
-            
+
+        # DESENHAR PLATAFORMAS
+        for platform in platforms:
+            pygame.draw.rect(window, GREEN, (platform["x"], platform["y"], platform_width, platform_height))
+        
         pygame.display.update()
 
         # CONTROLAR TAXA DE QUADROS
         clock.tick(60)
-    
+
 # INICIAR O JOGO
 main()
