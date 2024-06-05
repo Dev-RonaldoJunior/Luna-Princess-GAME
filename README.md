@@ -36,11 +36,13 @@ Luna Princess é um jogo de plataforma simples desenvolvido em Python usando a b
 ## Melhorias Futuras
 
 Aqui estão algumas ideias para melhorar o jogo:
-- Adicionar inimigos e obstáculos.
-- Adicionar diferentes níveis e telas de transição.
-- Implementar coleta de itens e sistema de pontuação.
-- Adicionar música e efeitos sonoros.
-- Melhorar os gráficos com sprites animados.
+- [ ] Adicionar inimigos.
+- [x] Adicionar obstáculos.
+- [x] Adicionar plataformas.
+- [ ] Adicionar diferentes níveis e telas de transição.
+- [ ] Implementar coleta de itens e sistema de pontuação.
+- [ ] Adicionar música e efeitos sonoros.
+- [ ] Melhorar os gráficos com sprites animados.
 
 ## Contribuições
 
