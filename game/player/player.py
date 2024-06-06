@@ -1,5 +1,5 @@
 import pygame
-from game.settings import HEIGHT, BLACK
+from game.settings import WIDTH, HEIGHT, BLACK
 from game.platforms import check_platform_collision, check_head_collision
 
 class Player:
@@ -12,18 +12,21 @@ class Player:
         self.is_jumping = False
         self.velocity_y = 0
         self.gravity = 0.8
+        self.jump_cooldown = 0.6  # Tempo de cooldown em segundos
+        self.last_jump_time = 0
 
     def move(self, keys):
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_LEFT] and self.x > 0:  # Verifica se o jogador não ultrapassa o lado esquerdo da tela
             self.x -= self.speed
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_RIGHT] and self.x < WIDTH - self.size:  # Verifica se o jogador não ultrapassa o lado direito da tela
             self.x += self.speed
 
     def jump(self, keys):
-        if not self.is_jumping:
-            if keys[pygame.K_SPACE]:
-                self.is_jumping = True
-                self.velocity_y = -self.jump_height
+        current_time = pygame.time.get_ticks() / 1000  # Tempo atual em segundos
+        if not self.is_jumping and keys[pygame.K_SPACE] and current_time - self.last_jump_time > self.jump_cooldown:
+            self.is_jumping = True
+            self.velocity_y = -self.jump_height
+            self.last_jump_time = current_time
 
     def update(self, platforms):
         if self.is_jumping:
